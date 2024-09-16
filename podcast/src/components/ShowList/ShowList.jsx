@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShowListWrapper } from './ShowList.styled';
-import { Paper, Typography, CircularProgress, Button } from '@mui/material'
+import { Paper, Typography, CircularProgress, } from '@mui/material'
 import styled from 'styled-components';
 // import styled from "@emotion/styled"
 
 
 const StyledPaper = styled(Paper)`
-   margin: 1rem;
-   background: #eee;
-   display: flex;
-   justify-content: space-between;
-   flex-direction: column;
+   width: 100%;
+   max-width: 300px;
    cursor: pointer;
-   transition: background-color 0.3s;
+   transition: transform 0.2s;
+   &:hover {
+      transform: scale(1.05);
+   }
+    display: flexbox;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+
+    @media (max-width: 768px){
+      width: 100%;
+    }
 `;
 
 const List = styled.ul`
@@ -33,11 +41,18 @@ const genreMap = {
    3: 'History',
    4: 'Comedy',
    5: 'Entertainment',
-   6: 'Buisness',
+   6: 'Business',
    7: 'Fiction',
    8: 'News',
    9: 'Kids and Family',
 };
+
+const formatDate = (dateStr) => {
+   const date = new Date(dateStr);
+   return (
+      date.toLocaleDateString()
+   )
+}
 
 const ShowList = () => {
    const [shows, setShows] = useState([]);
@@ -66,44 +81,42 @@ const ShowList = () => {
       fetchShows();
    }, []);
 
-   if(loading){
-      return(
+   if (loading) {
+      return (
          <ShowListWrapper>
-            <CircularProgress />
+            <CircularProgress align="center" />
          </ShowListWrapper>
       );
    }
+   const handleCardClick = (id) => {
+      navigate(`/show/${id}`);
+   }
 
-   const ListItem = ({ show }) => {
+   const ListItem = ({ show, onClick }) => {
       const { id, image, title, seasons, updated, genres } = show;
       if (!show) {
          console.error('Show is undefind', show)
       }
 
-      const handleClick = () =>{
-         navigate(`/show/${id}`);
-      }
       return (
-         <div onClick={() => navigate(`/show/${id}`)}>
-            <StyledPaper component="li" onClick={handleClick}>
-               <StyledImg src={show.image} alt={show.title || 'No image is found'} />
-               <Typography variant="h6">{title}</Typography>
-               <Typography variant="body2">{seasons} Seasons</Typography>
-               <Typography variant="body2">
-                  Genres: {genres.map(genreId => genreMap[genreId] || 'Unknown').join(', ')}
-               </Typography>
-               <Button onClick={handleClick} variant='contained' color='primary'>View Details</Button>
-            </StyledPaper>
-         </div>
+         <StyledPaper component="li" onClick={() => onClick(id)}>
+            <StyledImg src={show.image} alt={show.title || 'No image is found'} />
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body2">{seasons} Seasons</Typography>
+            <Typography variant="body2">
+               Genres: {genres.map(genreId => genreMap[genreId] || 'Error').join(', ')}
+            </Typography>
+            <Typography variant='body2'>Last Updated: {formatDate(updated)}</Typography>
+         </StyledPaper>
       )
    }
 
    return (
       <ShowListWrapper>
-         <List>
+         
             {shows.map(show =>
-               <ListItem key={show.id} show={show} />)}
-         </List>
+               <ListItem key={show.id} show={show} onClick={handleCardClick} />)}
+         
       </ShowListWrapper>
    )
 };

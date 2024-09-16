@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ShowDetailWrapper } from './ShowDetail.styled';
-import { useParams } from 'react-router-dom';
-import { ListItem, Typography, List, Paper, CircularProgress } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ListItem, Typography, List, Paper, CircularProgress, Button } from '@mui/material';
 import styled from 'styled-components';
 
 const StyledImg = styled.img`
@@ -16,9 +16,12 @@ const StyledImg = styled.img`
 
 const ShowDetail = () => {
    const { id } = useParams();
+   const navigate = useNavigate();
    const [show, setShow] = useState();
+   const [selectedEpisode, setSelectedEpisode] = useState();
    const [selectedSeason, setSelectedSeason] = useState();
    const [loading, setLoading] = useState(true);
+   const [error, setError] = useState();
 
    useEffect(() => {
       const fetchData = async () => {
@@ -26,7 +29,7 @@ const ShowDetail = () => {
             setLoading(true);
             const response = await fetch(`https://podcast-api.netlify.app/id/${id}`)
             if (!response.ok) {
-               throw new Error('Faild to retrieve data')
+               throw new Error('Failed to retrieve data');
             }
             const data = await response.json();
             setShow(data);
@@ -43,8 +46,16 @@ const ShowDetail = () => {
       fetchData();
    }, [id]);
 
-   if(loading){
-      return(
+   const handleEpisodeSelect = (episode) => {
+      setSelectedEpisode(episode);
+   }
+
+   const handleNavigateToSeasons = () =>{
+      navigate(`/`);
+   }
+
+   if (loading) {
+      return (
          <ShowDetailWrapper>
             <CircularProgress />
          </ShowDetailWrapper>
@@ -61,7 +72,8 @@ const ShowDetail = () => {
 
    return (
       <ShowDetailWrapper>
-         <StyledImg src={selectedSeason.image} alt={selectedSeason.title} />
+         <Button variant='outlined' color='primary' onClick={handleNavigateToSeasons}>Back</Button>
+         {selectedSeason && <StyledImg src={selectedSeason.image} alt={selectedSeason.title} />}
          <Typography variant='h4'>{show.title}</Typography>
          <Typography variant='body1'>{show.description}</Typography>
          <Typography variant='h6'>Season:</Typography>
@@ -76,10 +88,34 @@ const ShowDetail = () => {
             )}
          </List>
          {selectedSeason && (
-            <Paper style={{ padding: '1rem', marginTop: '1rem' }}>
-               <Typography variant='h5'>{selectedSeason.title}</Typography>
-               <Typography variant='body1'>{selectedSeason.description}</Typography>
-            </Paper>
+            <>
+               <Typography variant='h6'>Episodes:</Typography>
+               <List>
+                  {selectedSeason.episodes.map(episode => (
+                     <ListItem
+                        button
+                        key={episode.id}
+                        selected={episode.id === selectedEpisode?.id}
+                        onClick={() => handleEpisodeSelect(episode)}>
+                        {episode.title}
+                     </ListItem>
+                  ))}
+               </List>
+               {selectedEpisode && (
+                  <Paper style={{ padding: '1rem', marginTop: '1rem' }}>
+                     <Typography variant='h5'>{selectedEpisode.title}</Typography>
+                     <Typography variant='body1'>{selectedEpisode.description}</Typography>
+                     <Button
+                        variant='contained'
+                        color='primary'
+                        href={selectedEpisode.audioUrl} // Assuming that there is a mp3 file I can import here
+                        target='_blank'
+                        rel='noopener noreferrer'>
+                        Listen Now
+                     </Button>
+                  </Paper>
+               )}
+            </>
          )}
       </ShowDetailWrapper>
    );
