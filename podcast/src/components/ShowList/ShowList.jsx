@@ -88,9 +88,21 @@ const ShowList = () => {
    }, []);
 
    useEffect(() => {
-      const results = filterText ? shows.filter(show => 
+      let results = filterText ? shows.filter(show => 
          show.title.toLowerCase().includes(filterText.toLowerCase())): shows;
-   }, [filterText, shows])
+         
+         if(selectedGenres.length > 0){
+            results = results.filter(show => show.genres.some(genreId => selectedGenres.includes(genreId)));
+         }
+
+         results.sort((a, b) =>{
+            return(
+               sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
+            )
+         })
+         setFilteredShows(results)
+
+   }, [filterText, shows, sortOrder, selectedGenres]);
 
    if (loading) {
       return (
@@ -161,6 +173,7 @@ const ShowList = () => {
          {shows.map(show =>
             <ListItem key={show.id} show={show} onClick={handleCardClick} />)}
             <Filter open={filter}
+            shows={shows}
             onClose={handleCloseFilter}
             filterText={filterText}
             onFilterChange={setFilterText}

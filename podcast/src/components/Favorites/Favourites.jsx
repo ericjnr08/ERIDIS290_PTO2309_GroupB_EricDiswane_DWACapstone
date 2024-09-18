@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFavourites } from './FavouritesState';
-import { List, ListItem, ListItemText, IconButton, Typography, Divider } from '@mui/material';
+import { List, ListItem, ListItemText, IconButton, Typography, Divider, ButtonGroup, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const FavouritesData = () => {
@@ -29,9 +29,14 @@ const FavouritesData = () => {
         setSortedFavourites(sorted);
     };
 
-    const handleSortChange = (criteria) => {
-        setSortBy(criteria);
-        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    const handleSortChange = (data) => {
+        if(data === sortBy){
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(data);
+            setSortOrder('asc')
+        }
+        
     };
 
     const bindFavourites = favourites.reduce((acc, episode) => {
@@ -44,7 +49,7 @@ const FavouritesData = () => {
             acc[show, season] = [];
         }
 
-        acc[show, season].push(episode);
+        acc[show][season].push(episode);
 
         return acc;
     }, {});
@@ -68,7 +73,8 @@ const FavouritesData = () => {
                         <div key={season}>
                             <Typography variant="h6">Season {season}</Typography>
                             <List>
-                                {bindFavourites[show][season].map(episode => (
+                                {sortedFavourites.filter(episode => episode.show === show && episode.season === season)
+                                .map(episode => (
                                     <ListItem key={episode.id} secondaryAction={
                                         <IconButton edge="end" onClick={() => removeFavourites(episode)}>
                                             <DeleteIcon />

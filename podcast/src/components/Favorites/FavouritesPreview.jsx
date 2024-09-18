@@ -10,7 +10,7 @@ const Episode = ({episode}) => {
         if(isFavourites){
             setFavourites(favourites.filter(fav => fav.id !== episode.id));
         } else{
-            setFavourites([...favourites, episode]);
+            setFavourites([...favourites, {...episode, update: new Date()}]);
         }
     };
 

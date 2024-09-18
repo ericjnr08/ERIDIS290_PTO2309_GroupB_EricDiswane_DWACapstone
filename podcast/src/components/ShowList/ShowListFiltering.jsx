@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, ButtonGroup } from '@mui/material';
 import Fuse from 'fuse.js';
 
-const Filter = ({ open, onClose, filterText, onFilterChange, sortOrder, onSortChange, onGenreToggle, selectedGenres }) => {
+const Filter = ({ open, onClose, shows, filterText, onFilterChange, sortOrder, onSortChange, onGenreToggle, selectedGenres }) => {
     const genres = [
         { id: 1, name: 'Personal Growth' },
         { id: 2, name: 'True Crime' },
@@ -24,19 +24,19 @@ const Filter = ({ open, onClose, filterText, onFilterChange, sortOrder, onSortCh
         const results = fuse.search(filterText).map(result => result.item);
         onFilterChange(results);
         onClose();
-    };;
+    };
 
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Search</DialogTitle>
-        <DialogContent>
+            <DialogContent>
             <TextField label='Search Shows'
                 variant='outlined'
                 value={filterText}
                 onChange={(e) => onFilterChange(e.target.value)}
                 fullWidth
             />
-            <ButtonGroup variant='text' fullWidth>
+            <ButtonGroup variant='outlined' fullWidth style={{marginTop: '1rem'}}>
                 <Button variant={sortOrder === 'asc' ? 'contained' : 'outlined'}
                     onClick={() => onSortChange('asc')}>
                     Sort A-Z
@@ -58,7 +58,7 @@ const Filter = ({ open, onClose, filterText, onFilterChange, sortOrder, onSortCh
             </div>
             <Button variant='contained'
                 color='primary'
-                onClick={() => { onClose() }} style={{ marginTop: '1rem' }} >Search</Button>
+                onClick={handleSearch}>Search</Button>
         </DialogContent>
     </Dialog>
     );
