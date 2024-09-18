@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { FavouritesState } from '../Favorites/FavouritesState';
 import { ShowDetailWrapper } from './ShowDetail.styled';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ListItem, Typography, List, Paper, CircularProgress, Button } from '@mui/material';
@@ -14,12 +15,13 @@ const StyledImg = styled.img`
    margin-bottom: 1rem;
 `;
 
-const ShowDetail = () => {
+const ShowDetail = () => { 
    const { id } = useParams();
    const navigate = useNavigate();
    const [show, setShow] = useState();
    const [selectedEpisode, setSelectedEpisode] = useState();
    const [selectedSeason, setSelectedSeason] = useState();
+   const { favourites, addFavourites, removeFavourites } = useContext(FavouritesState)
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState();
 
@@ -54,10 +56,19 @@ const ShowDetail = () => {
       navigate(`/`);
    }
 
+   const handleFavouriteToggle = (episode) => {
+      const isFavourites = favourites.some(ep => ep.id === episode.id);
+      if (isFavourites) {
+          removeFavourites(episode.id);
+      } else {
+          addFavourites(episode);
+      }
+  };
+
    if (loading) {
       return (
          <ShowDetailWrapper>
-            <CircularProgress />
+            <CircularProgress>Loading Please wait...</CircularProgress>
          </ShowDetailWrapper>
       );
    }
@@ -72,12 +83,12 @@ const ShowDetail = () => {
 
    return (
       <ShowDetailWrapper>
-         <Button variant='outlined' color='primary' onClick={handleNavigateToSeasons}>Back</Button>
+         <Button variant='outlined' color='primary' onClick={handleNavigateToSeasons}>Back to Show</Button>
          {selectedSeason && <StyledImg src={selectedSeason.image} alt={selectedSeason.title} />}
          <Typography variant='h4'>{show.title}</Typography>
          <Typography variant='body1'>{show.description}</Typography>
          <Typography variant='h6'>Season:</Typography>
-         <List>
+         <List key={ShowDetail}>
             {show.seasons.sort((a, b) => a.number - b.number).map(season =>
                <ListItem
                   key={season.id}
@@ -112,6 +123,12 @@ const ShowDetail = () => {
                         target='_blank'
                         rel='noopener noreferrer'>
                         Listen Now
+                     </Button>
+                     <Button
+                         variant='outlined'
+                         color={favourites.some(ep => ep.id === selectedEpisode.id) ? 'secondary' : 'primary'}
+                         onClick={() => handleFavouriteToggle(selectedEpisode)}>
+                         {favourites.some(ep => ep.id === selectedEpisode.id) ? 'Remove from Favourites' : 'Add to Favourites'}
                      </Button>
                   </Paper>
                )}
