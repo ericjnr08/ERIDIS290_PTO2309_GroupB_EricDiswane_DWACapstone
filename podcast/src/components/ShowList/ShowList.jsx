@@ -29,12 +29,14 @@ const StyledPaper = styled(Paper)`
 const List = styled.ul`
    padding: 0.5rem;
    list-style: none;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
 `;
 
 const StyledImg = styled.img`
    width: 100px;
    display: flex;
-   
 `;
 
 const genreMap = {
@@ -69,12 +71,8 @@ const ShowList = () => {
    const fetchShows = () => {
       setLoading(true);
       fetch('https://podcast-api.netlify.app/shows')
-         .then((response) => {
-            if (!response.ok) {
-               throw new Error('Faild to retrieve data')
-            }
-            return response.json()
-         }).then(data => {
+         .then((response) => response.json())
+         .then(data => {
             setShows(data)
             setLoading(false);
          })
@@ -88,20 +86,27 @@ const ShowList = () => {
    }, []);
 
    useEffect(() => {
-      let results = filterText ? shows.filter(show => 
-         show.title.toLowerCase().includes(filterText.toLowerCase())): shows;
-         
-         if(selectedGenres.length > 0){
-            results = results.filter(show => show.genres.some(genreId => selectedGenres.includes(genreId)));
-         }
+      let results = typeof filterText === 'string' && filterText 
+        ? shows.filter(show => show.title.toLowerCase().includes(filterText.toLowerCase()))
+        : shows;
+      
+      if (filterText) {
+         results = results.filter(show =>
+            show.title.toLowerCase().includes(filterText.toLowerCase())
+         );
+      }
 
-         results.sort((a, b) =>{
-            return(
-               sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
-            )
-         })
-         setFilteredShows(results)
+      if (selectedGenres.length > 0) {
+         results = results.filter(show =>
+            show.genres.some(genreId => selectedGenres.includes(genreId))
+         );
+      }
 
+      results.sort((a, b) =>
+         sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
+      );
+
+      setFilteredShows(results);
    }, [filterText, shows, sortOrder, selectedGenres]);
 
    if (loading) {
@@ -123,7 +128,6 @@ const ShowList = () => {
       );
    };
    const handleOpenFilter = () => {
-      setFilter('');
       setFilter(true);
    };
    const handleCloseFilter = () => {
@@ -132,14 +136,14 @@ const ShowList = () => {
 
    const ListItem = ({ show, onClick }) => {
       const { id, image, title, seasons, updated, genres } = show;
-      const { addFavourites, removeFavourites, favourites } = useContext(FavouritesState)
+      
 
       const handleFavouriteToggle = (episode) => {
-         const isFavourite = favourites.some(ep => ep.id === episode.id);
+         const isFavourite = favourites.some(fav => fav.id === id);
          if (isFavourite) {
-            removeFavourites(episode.id);
+            removeFavourites(id);
          } else {
-            addFavourites({ id, image, title, seasons, updated, genres });
+            addFavourites(show);
          }
 
          if (!show) {
@@ -149,7 +153,7 @@ const ShowList = () => {
 
       return (
          <>
-         <StyledPaper component="li" onClick={() => onClick(id)}>
+         <StyledPaper component="li" onClick={() => handleCardClick(id)}>
             <StyledImg src={show.image} alt={show.title || 'No image is found'} />
             <Typography variant="h6">{title}</Typography>
             <Typography variant="body2">{seasons} Seasons</Typography>
@@ -157,9 +161,7 @@ const ShowList = () => {
                Genres: {genres.map(genreId => genreMap[genreId] || 'Error').join(', ')}
             </Typography>
             <Typography variant='body2'>Last Updated: {formatDate(updated)}</Typography>
-            <Button variant='outlined' onClick={handleFavouriteToggle}>
-               {favourites.some(ep => ep.id === id) ? 'Remove from Favourites' : 'Add to Favourites'}
-            </Button>
+
          </StyledPaper>
          </>
       );
@@ -170,8 +172,11 @@ const ShowList = () => {
          <div style={{display: 'flex', alignItems: 'flex-end', width: '100%'}}>
          <SearchIcon onClick={handleOpenFilter}  />
          </div>
-         {shows.map(show =>
-            <ListItem key={show.id} show={show} onClick={handleCardClick} />)}
+         <List>
+            {filteredShows.map(show => (
+               <ListItem key={show.id} show={show}/>
+            ))}
+         </List>
             <Filter open={filter}
             shows={shows}
             onClose={handleCloseFilter}
@@ -184,7 +189,7 @@ const ShowList = () => {
             />
             
       </ShowListWrapper>
-   );
-};
+   )};
+
 
 export default ShowList;

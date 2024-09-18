@@ -3,14 +3,14 @@ import { useFavourites } from './FavouritesState';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 
 const Episode = ({episode}) => {
-    const {favourites, setFavourites} = useFavourites();
+    const {favourites, addFavourites, removeFavourites} = useFavourites();
     const isFavourites = favourites.some(fav => fav.id === episode.id);
 
     const toggleFavourites = () => {
         if(isFavourites){
-            setFavourites(favourites.filter(fav => fav.id !== episode.id));
+            removeFavourites(favourites.filter(fav => fav.id !== episode.id));
         } else{
-            setFavourites([...favourites, {...episode, update: new Date()}]);
+            addFavourites({...episode, update: new Date()});
         }
     };
 

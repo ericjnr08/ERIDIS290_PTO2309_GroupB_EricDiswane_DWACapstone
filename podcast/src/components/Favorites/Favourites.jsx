@@ -30,33 +30,17 @@ const FavouritesData = () => {
     };
 
     const handleSortChange = (data) => {
-        if(data === sortBy){
+        if (data === sortBy) {
             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
         } else {
             setSortBy(data);
-            setSortOrder('asc')
+            setSortOrder('asc');
         }
-        
     };
-
-    const bindFavourites = favourites.reduce((acc, episode) => {
-        const { show, season } = episode;
-        if (!acc[show]) {
-            acc[show] = {};
-        }
-
-        if (!acc[show, season]) {
-            acc[show, season] = [];
-        }
-
-        acc[show][season].push(episode);
-
-        return acc;
-    }, {});
 
     const removeFavourites = (episodeRemove) => {
         setFavourites(favourites.filter(episode => episode.id !== episodeRemove.id));
-    }
+    };
 
     return (
         <div>
@@ -66,31 +50,19 @@ const FavouritesData = () => {
                 <Button onClick={() => handleSortChange('updated')}>Sort by Date Updated</Button>
             </ButtonGroup>
 
-            {Object.keys(bindFavourites).map(show => (
-                <div key={show}>
-                    <Typography variant="h5">{show}</Typography>
-                    {Object.keys(bindFavourites[show]).map(season => (
-                        <div key={season}>
-                            <Typography variant="h6">Season {season}</Typography>
-                            <List>
-                                {sortedFavourites.filter(episode => episode.show === show && episode.season === season)
-                                .map(episode => (
-                                    <ListItem key={episode.id} secondaryAction={
-                                        <IconButton edge="end" onClick={() => removeFavourites(episode)}>
-                                            <DeleteIcon />
-                                        </IconButton>}>
-                                        <ListItemText
-                                            primary={episode.title}
-                                            secondary={`Episode: ${episode.episodeNumber}`}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
-                            <Divider />
-                        </div>
-                    ))}
-                </div>
-            ))}
+            <List>
+                {sortedFavourites.map(episode => (
+                    <ListItem key={episode.id} secondaryAction={
+                        <IconButton edge="end" onClick={() => removeFavourites(episode)}>
+                            <DeleteIcon />
+                        </IconButton>}>
+                        <ListItemText
+                            primary={episode.title}
+                            secondary={`Episode: ${episode.episodeNumber}`}
+                        />
+                    </ListItem>
+                ))}
+            </List>
             {favourites.length === 0 && <Typography>No favourites added yet.</Typography>}
         </div>
     );

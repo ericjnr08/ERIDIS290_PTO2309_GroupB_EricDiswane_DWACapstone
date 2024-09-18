@@ -15,7 +15,7 @@ const StyledImg = styled.img`
    margin-bottom: 1rem;
 `;
 
-const ShowDetail = () => { 
+const ShowDetail = ({showId}) => { 
    const { id } = useParams();
    const navigate = useNavigate();
    const [show, setShow] = useState();

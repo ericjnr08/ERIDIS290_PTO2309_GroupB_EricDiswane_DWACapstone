@@ -22,7 +22,14 @@ const Filter = ({ open, onClose, shows, filterText, onFilterChange, sortOrder, o
         });
 
         const results = fuse.search(filterText).map(result => result.item);
-        onFilterChange(results);
+        const sortedResults = results.sort((a, b) =>{
+            if (sortOrder === 'asc') {
+                return a.title.localeCompare(b.title);
+            } else {
+                return b.title.localeCompare(a.title);
+            }
+        });
+        onFilterChange(sortedResults);
         onClose();
     };
 
