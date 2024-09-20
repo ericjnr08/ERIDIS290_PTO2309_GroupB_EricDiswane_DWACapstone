@@ -23,7 +23,7 @@ const ShowList = () => {
    const [filterText, setFilterText] = useState('')
    const [sortOrder, setSortOrder] = useState('asc');
    const [selectedGenres, setSelectedGenres] = useState([]);
-   const [filter, setFilter] = useState(false);
+   const [filterOpen, setFilterOpen] = useState(false);
    const navigate = useNavigate();
    const {shows, loading, filteredShows} = dataShows(filterText, sortOrder, selectedGenres);
 
@@ -46,17 +46,21 @@ const ShowList = () => {
       );
    };
    const handleCloseFilter = () => {
-      setFilter(false);
+      setFilterOpen(false);
    };
+
+   const handleOpenFilter = () => {
+      setFilterOpen(true)
+   }
 
    return (
       <ShowListWrapper>
          <ShowListStyle >
             {filteredShows.map(show => (
-               <ListItem key={show.id} show={show} onClick={handleCardClick}/>
+               <ListItem key={show.id} show={show} onClick={() => handleCardClick(show.id)}/>
             ))}
          </ShowListStyle>
-            <Filter open={filter}
+            <Filter open={filterOpen}
             shows={shows}
             onClose={handleCloseFilter}
             filterText={filterText}
