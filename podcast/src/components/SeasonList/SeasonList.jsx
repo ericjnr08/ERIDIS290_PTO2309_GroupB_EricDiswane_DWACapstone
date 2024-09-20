@@ -20,31 +20,31 @@ const StyledImg = styled.img`
 `;
 
 const SeasonList = () => {
-    const { showId } = useParams(); 
+    const { showId } = useParams();
     const [seasons, setSeasons] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    useEffect(() =>{
+    useEffect(() => {
         setLoading(true);
         fetch(`https://podcast-api.netlify.app/shows/${showId}/seasons`)
-            .then(response =>{
-                if(!response.ok) {
+            .then(response => {
+                if (!response.ok) {
                     throw new Error('Failed to retrieve seasons')
                 }
                 return response.json();
             })
-            .then(data =>{
+            .then(data => {
                 setSeasons(data)
                 setLoading(false)
             })
-            .catch(error =>{
+            .catch(error => {
                 console.error('Error fetching seasons:', error);
                 setLoading(false);
             })
     }, [showId])
 
-    if(loading){
+    if (loading) {
         return (
             <SeasonListWrapper>
                 <CircularProgress />
@@ -52,21 +52,21 @@ const SeasonList = () => {
         );
     }
 
-    if(seasons.length === 0){
-        return(
+    if (seasons.length === 0) {
+        return (
             <SeasonListWrapper>
-                
+
             </SeasonListWrapper>
         )
     }
 
-    return(
+    return (
         <SeasonListWrapper>
-            {seasons.map(season =>(
+            {seasons.map(season => (
                 <StyledPaper key={season.id}>
                     <StyledImg src={season.image} alt={season.title || 'No image found'} />
                     <Typography variant='h6'>{season.title}</Typography>
-                    <Typography variant='body2'>{season.episodes} Episode{season.episode > 1? 's' : ''}</Typography>
+                    <Typography variant='body2'>{season.episodes} Episode{season.episode > 1 ? 's' : ''}</Typography>
                 </StyledPaper>
             ))}
         </SeasonListWrapper>

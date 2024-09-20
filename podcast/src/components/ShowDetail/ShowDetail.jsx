@@ -15,7 +15,7 @@ const StyledImg = styled.img`
    margin-bottom: 1rem;
 `;
 
-const ShowDetail = ({showId}) => { 
+const ShowDetail = ({ showId }) => {
    const { id } = useParams();
    const navigate = useNavigate();
    const [show, setShow] = useState();
@@ -23,7 +23,7 @@ const ShowDetail = ({showId}) => {
    const [selectedSeason, setSelectedSeason] = useState();
    const { favourites, addFavourites, removeFavourites } = useContext(FavouritesState)
    const [loading, setLoading] = useState(true);
-   
+
 
    useEffect(() => {
       const fetchData = async () => {
@@ -52,18 +52,18 @@ const ShowDetail = ({showId}) => {
       setSelectedEpisode(episode);
    }
 
-   const handleNavigateToSeasons = () =>{
+   const handleNavigateToSeasons = () => {
       navigate(`/`);
    }
 
    const handleFavouriteToggle = (episode) => {
       const isFavourites = favourites.some(ep => ep.id === episode.id);
       if (isFavourites) {
-          removeFavourites(episode.id);
+         removeFavourites(episode.id);
       } else {
-          addFavourites(episode);
+         addFavourites(episode);
       }
-  };
+   };
 
    if (loading) {
       return (
@@ -125,10 +125,10 @@ const ShowDetail = ({showId}) => {
                         Listen Now
                      </Button>
                      <Button
-                         variant='outlined'
-                         color={favourites.some(ep => ep.id === selectedEpisode.id) ? 'secondary' : 'primary'}
-                         onClick={() => handleFavouriteToggle(selectedEpisode)}>
-                         {favourites.some(ep => ep.id === selectedEpisode.id) ? 'Remove from Favourites' : 'Add to Favourites'}
+                        variant='outlined'
+                        color={favourites.some(ep => ep.id === selectedEpisode.id) ? 'secondary' : 'primary'}
+                        onClick={() => handleFavouriteToggle(selectedEpisode)}>
+                        {favourites.some(ep => ep.id === selectedEpisode.id) ? 'Remove from Favourites' : 'Add to Favourites'}
                      </Button>
                   </Paper>
                )}

@@ -47,22 +47,22 @@ const formatDate = (dateStr) => {
 }
 
 const ListItem = ({ show, onClick }) => {
-    const { id, image, title, seasons, updated, genres } = show;
-    
+   const { id, image, title, seasons, updated, genres } = show;
 
-    return (
-       <>
-       <StyledPaper component="li" onClick={() => onClick(id)}>
-          <StyledImg src={show.image} alt={show.title || 'No image is found'} />
-          <Typography variant="h6">{title}</Typography>
-          <Typography variant="body2">{seasons} Seasons</Typography>
-          <Typography variant="body2">
-             Genres: {genres.map(genreId => genreMap[genreId] || 'Error').join(', ')}
-          </Typography>
-          <Typography variant='body2'>Last Updated: {formatDate(updated)}</Typography>
-       </StyledPaper>
-       </>
-    );
- };
 
- export default ListItem;
+   return (
+      <>
+         <StyledPaper component="li" onClick={() => onClick(id)}>
+            <StyledImg src={show.image} alt={show.title || 'No image is found'} />
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body2">{seasons} Seasons</Typography>
+            <Typography variant="body2">
+               Genres: {genres.map(genreId => genreMap[genreId] || 'Error').join(', ')}
+            </Typography>
+            <Typography variant='body2'>Last Updated: {formatDate(updated)}</Typography>
+         </StyledPaper>
+      </>
+   );
+};
+
+export default ListItem;

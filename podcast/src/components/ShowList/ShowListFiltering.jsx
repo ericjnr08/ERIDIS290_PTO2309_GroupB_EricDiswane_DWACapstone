@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, ButtonGroup, List, ListItem, ListItemText } from '@mui/material';
 import Fuse from 'fuse.js';
 
 const Filter = ({ open, onClose, shows, onNavigate, onSearchResults, filterText, onFilterChange, sortOrder, onSortChange, onGenreToggle, selectedGenres }) => {
     const [searchResults, setSearchResults] = useState([])
-    
+
     const genres = [
         { id: 1, name: 'Personal Growth' },
         { id: 2, name: 'True Crime' },
@@ -34,12 +34,12 @@ const Filter = ({ open, onClose, shows, onNavigate, onSearchResults, filterText,
         });
 
         onSearchResults(sortedResults);
-        if(sortedResults.length === 1){
+        if (sortedResults.length === 1) {
             onNavigate(sortedResults[0].id)
-        }else{
+        } else {
             setSearchResults(sortedResults)
         }
-        
+
     };
 
     return (
@@ -75,7 +75,7 @@ const Filter = ({ open, onClose, shows, onNavigate, onSearchResults, filterText,
                 <Button variant='contained'
                     color='primary'
                     onClick={handleSearch}>Search</Button>
-                    {searchResults.length > 1 && (
+                {searchResults.length > 1 && (
                     <List>
                         {searchResults.map((result) => (
                             <ListItem button key={result.id} onClick={() => onNavigate(result.id)}>
@@ -83,7 +83,7 @@ const Filter = ({ open, onClose, shows, onNavigate, onSearchResults, filterText,
                             </ListItem>
                         ))};
                     </List>
-                    )}
+                )}
             </DialogContent>
         </Dialog>
     );

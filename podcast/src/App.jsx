@@ -17,11 +17,11 @@ const App = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path='/' element={<ShowList/>}/>
-          <Route path='/show/:id' element={<ShowDetail/>}/>
-          <Route path='/show/:id/seasons' element={<SeasonList/>}/>
-          <Route path='/favourites' element={<FavouritesData/>}/>
-          <Route path='/episode/:id' element={<Episode />}/>
+          <Route path='/' element={<ShowList />} />
+          <Route path='/show/:id' element={<ShowDetail />} />
+          <Route path='/show/:id/seasons' element={<SeasonList />} />
+          <Route path='/favourites' element={<FavouritesData />} />
+          <Route path='/episode/:id' element={<Episode />} />
         </Routes>
       </Router>
     </div>

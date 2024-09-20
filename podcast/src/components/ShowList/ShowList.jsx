@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShowListWrapper, ShowListStyle} from './ShowList.styled';
-import { CircularProgress} from '@mui/material';
-import dataShows  from '../API/ApiData';
+import { ShowListWrapper, ShowListStyle } from './ShowList.styled';
+import { CircularProgress } from '@mui/material';
+import dataShows from '../API/ApiData';
 import ListItem from './ListItems';
 import Filter from './ShowListFiltering';
 
@@ -25,7 +25,7 @@ const ShowList = () => {
    const [selectedGenres, setSelectedGenres] = useState([]);
    const [filterOpen, setFilterOpen] = useState(false);
    const navigate = useNavigate();
-   const {shows, loading, filteredShows} = dataShows(filterText, sortOrder, selectedGenres);
+   const { shows, loading, filteredShows } = dataShows(filterText, sortOrder, selectedGenres);
 
    if (loading) {
       return (
@@ -49,18 +49,14 @@ const ShowList = () => {
       setFilterOpen(false);
    };
 
-   const handleOpenFilter = () => {
-      setFilterOpen(true)
-   }
-
    return (
       <ShowListWrapper>
          <ShowListStyle >
             {filteredShows.map(show => (
-               <ListItem key={show.id} show={show} onClick={() => handleCardClick(show.id)}/>
+               <ListItem key={show.id} show={show} onClick={() => handleCardClick(show.id)} />
             ))}
          </ShowListStyle>
-            <Filter open={filterOpen}
+         <Filter open={filterOpen}
             shows={shows}
             onClose={handleCloseFilter}
             filterText={filterText}
@@ -69,10 +65,11 @@ const ShowList = () => {
             onSortChange={handleSortChange}
             onGenreToggle={handleGenreToggle}
             selectedGenres={selectedGenres}
-            />
-            
+         />
+
       </ShowListWrapper>
-   )};
+   )
+};
 
 
 export default ShowList;
