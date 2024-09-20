@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, ButtonGroup } from '@mui/material';
 import Fuse from 'fuse.js';
 
-const Filter = ({ open, onClose, shows, filterText, onFilterChange, sortOrder, onSortChange, onGenreToggle, selectedGenres }) => {
+const Filter = ({ open, onClose, shows, onSearch, filterText, onFilterChange, sortOrder, onSortChange, onGenreToggle, selectedGenres }) => {
     const genres = [
         { id: 1, name: 'Personal Growth' },
         { id: 2, name: 'True Crime' },
@@ -22,6 +22,13 @@ const Filter = ({ open, onClose, shows, filterText, onFilterChange, sortOrder, o
         });
 
         const results = fuse.search(filterText).map(result => result.item);
+        if(results.length > 0){
+            onSearch(results[0].id);
+        } else{
+            console.log('No shows were found')
+        }
+         onClose();
+         
         const sortedResults = results.sort((a, b) =>{
             if (sortOrder === 'asc') {
                 return a.title.localeCompare(b.title);

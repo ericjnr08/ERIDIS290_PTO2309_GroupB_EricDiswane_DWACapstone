@@ -6,6 +6,9 @@ import SeasonList from './components/SeasonList/SeasonList'
 import FavouritesData from './components/Favorites/Favourites'
 import Episode from './components/Favorites/FavouritesPreview'
 import Navbar from './components/Navbar/Navbar'
+// import Authenticate from './components/SuperBase/Authenticate'
+// import RequireAuth from './components/SuperBase/RequireAuth'
+// import { AuthData } from './components/SuperBase/AuthenticationData'
 
 
 const App = () => {

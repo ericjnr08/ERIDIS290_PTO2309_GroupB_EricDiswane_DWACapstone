@@ -23,7 +23,7 @@ const ShowDetail = ({showId}) => {
    const [selectedSeason, setSelectedSeason] = useState();
    const { favourites, addFavourites, removeFavourites } = useContext(FavouritesState)
    const [loading, setLoading] = useState(true);
-   const [error, setError] = useState();
+   
 
    useEffect(() => {
       const fetchData = async () => {
