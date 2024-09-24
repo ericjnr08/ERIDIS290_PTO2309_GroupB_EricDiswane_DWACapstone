@@ -119,7 +119,7 @@ const ShowDetail = ({ showId }) => {
                      <Button
                         variant='contained'
                         color='primary'
-                        href={selectedEpisode.audioUrl} // Assuming that there is a mp3 file I can import here
+                        href={selectedEpisode.audioUrl}
                         target='_blank'
                         rel='noopener noreferrer'>
                         Listen Now
